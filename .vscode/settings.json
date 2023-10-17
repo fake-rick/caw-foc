@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "usart.h": "c",
+        "log.h": "c",
+        "api.h": "c",
+        "tim.h": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "stm32h7xx_hal_sdram.h": "c",
+        "stm32h7xx_hal_def.h": "c",
+        "sync_data.h": "c",
+        "error.h": "c",
+        "gpio.h": "c",
+        "spi.h": "c",
+        "drv8323.h": "c",
+        "can_util.h": "c",
+        "driver_6pwm.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+    "stm32-for-vscode.makePath": "C:\\USERS\\RICK\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\WINDOWS-BUILD-TOOLS\\4.4.0-1.1\\.CONTENT\\BIN\\MAKE.EXE",
+    "cortex-debug.armToolchainPath": "c:\\Users\\Rick\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\arm-none-eabi-gcc\\12.3.1-1.1.1\\.content\\bin",
+    "cortex-debug.openocdPath": "C:\\USERS\\RICK\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\OPENOCD\\0.12.0-1.1\\.CONTENT\\BIN\\OPENOCD.EXE",
+    "C_Cpp.default.compilerPath": "C:\\USERS\\RICK\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\ARM-NONE-EABI-GCC\\12.3.1-1.1.1\\.CONTENT\\BIN\\ARM-NONE-EABI-GCC.EXE",
+    "cortex-debug.variableUseNaturalFormat": false
+}

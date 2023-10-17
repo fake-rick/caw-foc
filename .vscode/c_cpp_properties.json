@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "name": "STM32",
+      "includePath": [
+        "CAW-PACKAGES",
+        "CAW-PACKAGES/FOC",
+        "CAW-PACKAGES/FOC/common",
+        "CAW-PACKAGES/FOC/drivers",
+        "CAW-PACKAGES/FOC/hws/DRV8323",
+        "CAW-PACKAGES/FOC/sensors",
+        "CAW-PACKAGES/FOC/sensors/AS5047P",
+        "CAW-PACKAGES/Utils/CAN",
+        "CAW-PACKAGES/Utils/Log",
+        "Core/Inc",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+        "Drivers/CMSIS/Include",
+        "Drivers/STM32F4xx_HAL_Driver/Inc",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+        "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS",
+        "Middlewares/Third_Party/FreeRTOS/Source/include",
+        "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
+      ],
+      "defines": [
+        "STM32F446xx",
+        "USE_HAL_DRIVER",
+        "_DEBUG"
+      ],
+      "compilerPath": "C:\\USERS\\RICK\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\ARM-NONE-EABI-GCC\\12.3.1-1.1.1\\.CONTENT\\BIN\\ARM-NONE-EABI-GCC.EXE"
+    }
+  ],
+  "version": 4
+}
