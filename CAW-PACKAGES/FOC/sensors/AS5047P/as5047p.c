@@ -20,12 +20,14 @@ static inline int _ReadWrite(AS5047P_T *a, uint16_t tx, uint16_t *rx) {
 
 static inline int _ReadData(AS5047P_T *a) {
   uint16_t v;
+_AGAIN:
   _ReadWrite(a, 0xffff, &v);
   _ReadWrite(a, 0xffff, &(a->raw_angle));
   if (a->raw_angle & 0x4000) {
     _ReadWrite(a, 0x4001, &v);
-    CAW_LOG_ERROR("ERR CODE: %x", v);
-    return CAW_ERR;
+    _ReadWrite(a, 0xc000, &v);
+    // CAW_LOG_ERROR("ERR CODE: %x", v);
+    goto _AGAIN;
   }
   a->raw_angle &= 0x3fff;
   return CAW_OK;

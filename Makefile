@@ -89,7 +89,9 @@ CAW-PACKAGES/FOC/drivers/driver_6pwm.c \
 CAW-PACKAGES/FOC/hws/DRV8323/drv8323.c \
 CAW-PACKAGES/FOC/sensors/AS5047P/as5047p.c \
 CAW-PACKAGES/FOC/sensors/sensor.c \
-CAW-PACKAGES/FOC/sensors/current_sensor.c
+CAW-PACKAGES/FOC/sensors/current_sensor.c \
+CAW-PACKAGES/Utils/endian.c \
+CAW-PACKAGES/Protocol/protocol.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -155,6 +157,7 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -ICAW-PACKAGES \
+-ICAW-PACKAGES/Utils \
 -ICAW-PACKAGES/Utils/Log \
 -ICAW-PACKAGES/Utils/CAN \
 -ICAW-PACKAGES/FOC \
@@ -162,7 +165,8 @@ C_INCLUDES =  \
 -ICAW-PACKAGES/FOC/drivers \
 -ICAW-PACKAGES/FOC/hws/DRV8323 \
 -ICAW-PACKAGES/FOC/sensors/AS5047P \
--ICAW-PACKAGES/FOC/sensors
+-ICAW-PACKAGES/FOC/sensors \
+-ICAW-PACKAGES/Protocol
 
 
 

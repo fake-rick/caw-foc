@@ -13,11 +13,11 @@ void MOTOR_Init(MOTOR_T* motor, int pp) {
   motor->pole_pairs = pp;
   motor->modulation_centered = 1;
 
-  PID_Init(&(motor->PID_velocity), 0.5f, 20.0f, 0.0f, 1000.0f, 24.0f);
+  PID_Init(&(motor->PID_velocity), 0.5f, 20.0f, 0.0f, 1000.0f, 12.0f);
   PID_Init(&(motor->PID_angle), 20.0f, 0, 0, 0, 24.0f);
 
-  PID_Init(&(motor->PID_current_q), 5.0f, 200.0f, 0, 0.0f, 24.0f);
-  PID_Init(&(motor->PID_current_d), 5.0f, 300.0f, 0, 0.0f, 24.0f);
+  PID_Init(&(motor->PID_current_q), 5.0f, 200.0f, 0, 0.0f, 12.0f);
+  PID_Init(&(motor->PID_current_d), 5.0f, 200.0f, 0, 0.0f, 12.0f);
 
   LOWPASS_FILTER_Init(&(motor->LPF_velocity), 0.005f);
   LOWPASS_FILTER_Init(&(motor->LPF_angle), 0.005f);
@@ -35,6 +35,8 @@ void MOTOR_Init(MOTOR_T* motor, int pp) {
   motor->current.q = 0;
 
   motor->open_loop_timestamp = 0;
+
+  motor->controller = TORQUE;
 
   SENSOR_Init(&hspi1);
   CURRENT_SENSOR_Init(&(motor->current_sensor), &hadc1);
@@ -139,10 +141,14 @@ void MOTOR_Step(MOTOR_T* motor) {
 
   motor->current.q =
       LOWPASS_FILTER_Calc(&(motor->LPF_current_q), motor->current.q);
+  motor->current.d =
+      LOWPASS_FILTER_Calc(&(motor->LPF_current_d), motor->current.d);
   motor->voltage.q =
       PID_Calc(&(motor->PID_current_q), motor->current_sp - motor->current.q);
+  motor->voltage.d = PID_Calc(&(motor->PID_current_d), -motor->current.d);
 
-  MOTOR_SetPhaseVoltage(motor, motor->voltage.q, 0, motor->electrical_angle);
+  MOTOR_SetPhaseVoltage(motor, motor->voltage.q, motor->voltage.d,
+                        motor->electrical_angle);
 }
 
 float MOTOR_ElectricalAngle(MOTOR_T* motor) {
@@ -165,35 +171,29 @@ int MOTOR_AlignSensor(MOTOR_T* motor) {
 void MOTOR_Move(MOTOR_T* motor, float new_target) {
   motor->shaft_angle = MOTOR_ShaftAngle(motor);
   motor->shaft_velocity = MOTOR_ShaftVelocity(motor);
-  //! 闭环速度控制
-  // motor->shaft_velocity_sp = new_target;
-  // motor->current_sp = PID_Calc(
-  //     &(motor->PID_velocity), motor->shaft_velocity_sp -
-  //     motor->shaft_velocity);
 
-  // motor->voltage.q = motor->current_sp;
-  // motor->voltage.d = 0;
-
-  //! 闭环角度控制
-  motor->shaft_angle_sp = new_target;
-  // calculate velocity set point
-  motor->shaft_velocity_sp =
-      motor->feed_forward_velocity +
-      PID_Calc(&(motor->PID_angle), motor->shaft_angle_sp - motor->shaft_angle);
-  motor->shaft_angle_sp = _constrain(
-      motor->shaft_angle_sp, -motor->velocity_limit, motor->velocity_limit);
-  // calculate the torque command - sensor precision: this calculation is ok,
-  // but based on bad value from previous calculation
-  motor->current_sp =
-      PID_Calc(&(motor->PID_velocity),
-               motor->shaft_velocity_sp -
-                   motor->shaft_velocity);  // if voltage torque control
-  // if torque controlled through voltage
-  motor->voltage.q = motor->current_sp;
-  motor->voltage.d = 0;
-
-  // motor->voltage.d = 0;
-  // motor->current_sp = new_target;
+  if (motor->controller == TORQUE) {
+    //! 力矩控制
+    motor->current_sp = new_target;
+  } else if (motor->controller == VELOCITY) {
+    //! 闭环速度控制
+    motor->shaft_velocity_sp = new_target;
+    motor->current_sp =
+        PID_Calc(&(motor->PID_velocity),
+                 motor->shaft_velocity_sp - motor->shaft_velocity);
+  } else if (motor->controller == ANGLE) {
+    //! 闭环角度控制
+    motor->shaft_angle_sp = new_target;
+    motor->shaft_velocity_sp =
+        motor->feed_forward_velocity +
+        PID_Calc(&(motor->PID_angle),
+                 motor->shaft_angle_sp - motor->shaft_angle);
+    motor->shaft_angle_sp = _constrain(
+        motor->shaft_angle_sp, -motor->velocity_limit, motor->velocity_limit);
+    motor->current_sp =
+        PID_Calc(&(motor->PID_velocity),
+                 motor->shaft_velocity_sp - motor->shaft_velocity);
+  }
 }
 
 float MOTOR_ShaftVelocity(MOTOR_T* motor) {

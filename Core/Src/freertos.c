@@ -57,6 +57,9 @@ extern AS5047P_T g_sensor;
 DRV8323_T driver;
 volatile uint8_t drv_health_state;
 volatile uint8_t drv_init_state;
+volatile uint8_t foc_run_state;
+float foc_target;
+MOTOR_T motor;
 /* USER CODE END Variables */
 osThreadId stateTaskHandle;
 osThreadId driverTaskHandle;
@@ -98,6 +101,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
   drv_health_state = 0;
   drv_init_state = 0;
+  foc_run_state = 0;
+  foc_target = 0.0f;
   CAN_Init();
   /* USER CODE END Init */
 
@@ -183,15 +188,14 @@ void StartDriverTask(void const *argument) {
     CAW_LOG_FAIL("DRV8323 init failed...");
   }
 
-  MOTOR_T motor;
   DRIVER_6PWM_T driver_6;
   DRIVER_6PWM_Init(&driver_6, &htim1, PWM_PERIOD);
-  MOTOR_Init(&motor, 14);
+  MOTOR_Init(&motor, 7);
   MOTOR_LinkDriver(&motor, &driver_6);
 
-  driver_6.voltage_power_supply = 24.0f;
-  driver_6.voltage_limit = 20.0f;
-  motor.voltage_limit = 20.0f;
+  driver_6.voltage_power_supply = 12.0f;
+  driver_6.voltage_limit = 10.0f;
+  motor.voltage_limit = 10.0f;
   motor.voltage_sensor_align = 3.0f;
 
   motor.PID_velocity.P = 0.2f;
@@ -200,30 +204,17 @@ void StartDriverTask(void const *argument) {
   motor.LPF_velocity.Tf = 0.01;
   motor.PID_angle.P = 10.0f;
 
-  motor.shaft_velocity_sp = 6.28f;
-
-  float target_angle = 0;
-
-  int count = 0;
+  motor.controller = TORQUE;
+  motor.shaft_velocity_sp = 0.0f;
 
   MOTOR_AlignSensor(&motor);
 
   /* Infinite loop */
   for (;;) {
-    if (count++ >= 500) {
-      count = 0;
-      target_angle = target_angle == 0 ? 6.28 : 0;
+    if (foc_run_state) {
+      MOTOR_Step(&motor);
+      MOTOR_Move(&motor, foc_target);
     }
-    MOTOR_Step(&motor);
-    MOTOR_Move(&motor, target_angle);
-    // MOTOR_VelocityOpenloop(&motor, 6.28);
-    // CURRENT_SENSOR_Update(&(motor.current_sensor));
-    // motor.current.q =
-    //     LOWPASS_FILTER_Calc(&(motor.LPF_current_q), motor.current.q);
-    // if (count++ > 30) {
-    //   count = 0;
-    //   CAW_LOG_DEBUG("q: %f", motor.current.q);
-    // }
     osDelay(1);
   }
   /* USER CODE END StartDriverTask */

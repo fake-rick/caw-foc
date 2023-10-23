@@ -111,11 +111,6 @@ int DRV8323_Init(DRV8323_T* drv, SPI_HandleTypeDef* hspi) {
   drv->hspi = hspi;
   _ENABLE(1);
   HAL_Delay(500);
-  // 较准放大器
-  _CAL(1);
-  HAL_Delay(100);
-  _CAL(0);
-  HAL_Delay(100);
   // 配置寄存器
   if (_SetReg(drv, DRV8323_DRIVER_CONTROL_REG, 0b00000000000)) {
     return CAW_ERR;
@@ -132,6 +127,13 @@ int DRV8323_Init(DRV8323_T* drv, SPI_HandleTypeDef* hspi) {
   if (_SetReg(drv, DRV8323_CSA_CONTROL_REG, 0b01011000011)) {
     return CAW_ERR;
   }
+
+  // 较准放大器
+  _CAL(1);
+  HAL_Delay(100);
+  _CAL(0);
+  HAL_Delay(100);
+
   return CAW_OK;
 }
 

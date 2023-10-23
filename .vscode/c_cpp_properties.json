@@ -10,6 +10,8 @@
         "CAW-PACKAGES/FOC/hws/DRV8323",
         "CAW-PACKAGES/FOC/sensors",
         "CAW-PACKAGES/FOC/sensors/AS5047P",
+        "CAW-PACKAGES/Protocol",
+        "CAW-PACKAGES/Utils",
         "CAW-PACKAGES/Utils/CAN",
         "CAW-PACKAGES/Utils/Log",
         "Core/Inc",

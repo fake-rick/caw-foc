@@ -45,8 +45,10 @@ CAW-PACKAGES/FOC/motor.c \
 CAW-PACKAGES/FOC/sensors/AS5047P/as5047p.c \
 CAW-PACKAGES/FOC/sensors/current_sensor.c \
 CAW-PACKAGES/FOC/sensors/sensor.c \
+CAW-PACKAGES/Protocol/protocol.c \
 CAW-PACKAGES/Utils/CAN/can_util.c \
 CAW-PACKAGES/Utils/Log/log.c \
+CAW-PACKAGES/Utils/endian.c \
 Core/Src/adc.c \
 Core/Src/can.c \
 Core/Src/freertos.c \
@@ -170,6 +172,8 @@ C_INCLUDES =  \
 -ICAW-PACKAGES/FOC/hws/DRV8323 \
 -ICAW-PACKAGES/FOC/sensors \
 -ICAW-PACKAGES/FOC/sensors/AS5047P \
+-ICAW-PACKAGES/Protocol \
+-ICAW-PACKAGES/Utils \
 -ICAW-PACKAGES/Utils/CAN \
 -ICAW-PACKAGES/Utils/Log \
 -ICore/Inc \

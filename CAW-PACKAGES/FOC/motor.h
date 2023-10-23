@@ -53,6 +53,7 @@ typedef struct _MOTOR_T {
   float shaft_velocity_sp;      // 当前目标速度
   float feed_forward_velocity;  // 当前前馈速度
 
+  MOTION_CONTROL_TYPE_E controller;
 } MOTOR_T;
 
 void MOTOR_Init(MOTOR_T* motor, int pp);
